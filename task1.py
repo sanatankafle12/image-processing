@@ -1,22 +1,52 @@
-from PIL import Image, ImageDraw, ImageChops
 import numpy as np
+import cv2
 
-# Load the image
-image_path = "circle.jpg"
-image = Image.open(image_path)
+def draw_circle(image_path):
+    image = cv2.imread(image_path)
+    width, height = image.shape[:2]
 
-# Convert to grayscale
-gray_image = image.convert("L")
+    center_x = width//2
+    center_y = height//2
 
-# Binarize the image (thresholding)
-binary_image = gray_image.point(lambda p: p > 128 and 255)
+    for y in range(height):
+        pixel = image[y, center_x]
+        if np.sum(np.abs(pixel-[255,255,255]))>50:
+            edge_y = y 
+            break
 
-# Find the bounding box of the circle
-bbox = binary_image.getbbox()
+    for y in range(edge_y+1, height):
+        pixel = image[y, center_x]
+        if np.sum(np.abs(pixel-[255,255,255]))>50:
+            break_y = y
+            break
+    
+    if 'edge_y' in locals() and 'break_y' in locals():
+        large_radius = (break_y - edge_y) //2
 
-# Calculate the radius
-width = bbox[2] - bbox[0]
-height = bbox[3] - bbox[1]
-radius = width / 2
+    new_image = np.ones((height, width, 3), dtype=np.uint8) * 255
 
-print(radius)
+
+    rescale = 3
+    small_radius = int(large_radius / rescale)
+
+    # Calculate the positions of the smaller circles
+    center_x = width // 2
+    center_y = height // 2
+    left_center = (center_x - large_radius - small_radius, center_y)
+    right_center = (center_x + large_radius + small_radius, center_y)
+    top_center = (center_x, center_y - large_radius - small_radius)
+    bottom_center = (center_x, center_y + large_radius + small_radius)
+
+    # Draw the smaller circles
+    cv2.circle(new_image, left_center, small_radius, (0, 0, 0), 2)
+    cv2.circle(new_image, right_center, small_radius, (0, 0, 0), 2)
+    cv2.circle(new_image, top_center, small_radius, (0, 0, 0), 2)
+    cv2.circle(new_image, bottom_center, small_radius, (0, 0, 0), 2)
+
+    # Draw the large circle
+    cv2.circle(new_image, (center_x, center_y), large_radius, (0, 0, 0), 2)
+
+    cv2.imwrite('images/circles_output.jpg', new_image)
+
+draw_circle('images/circle.jpg')
+
