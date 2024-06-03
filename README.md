@@ -64,5 +64,5 @@ Use the save_image function to save the modified image to the specified output p
 # Steps to Run the code Locally
 
 1. Download and install Docker on your machine.
-2. ``` docker build ``` 
-3. ``` docker run <app_name> <python_script> ```
+2. ```docker build . -t circle_task ``` 
+3. ``` docker run --rm -v $(pwd)/images:/usr/src/app/images circle_task  task1.py**** ```
