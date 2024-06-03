@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def change_color_in_image(image_path: str, color_to_replace: list, replacement_hue: float) -> None:
+def change_color_in_image(image_path: str, output_image_path : str, color_to_replace: list, replacement_hue: float) -> None:
     """Replaces a color in an image with another while preserving lighting."""
 
     image = _read_image(image_path)
@@ -15,7 +15,7 @@ def change_color_in_image(image_path: str, color_to_replace: list, replacement_h
     image_hsv_new = replace_color_preserving_lighting(image_hsv, mask, replacement_hue)
     image_bgr_new = convert_image_back(image_hsv_new)
 
-    save_image(image_bgr_new, "images/output_fish.jpg")
+    save_image(image_bgr_new, output_image_path)
 
 
 def _read_image(image_path: str) -> np.ndarray:
@@ -71,4 +71,4 @@ def save_image(image: np.ndarray, output_path: str) -> None:
 color_to_replace = [[0, 200, 200], [255, 255, 255]]
 replacement_hue = 60
 
-change_color_in_image("images/fish.jpg", color_to_replace, replacement_hue)
+change_color_in_image("images/fish.jpg", 'images/output_fish.jpg',color_to_replace, replacement_hue)
