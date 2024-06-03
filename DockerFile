@@ -1,36 +1,17 @@
-FROM python:3.8
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
+# Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# Define base CMD for change_color_in_image.py (default)
-CMD ["python", "change_color_in_image.py"]
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Handle arguments for draw_circle.py
+# Set the entrypoint to use Python
 ENTRYPOINT ["python"]
 
-RUN echo "Available tasks: color_replace, draw_circles"
-
-# Optional: Separate directory for task scripts
-ADD --silent . /app/scripts
-
-RUN echo "Running draw_circles task..."
-
-# Copy script if not already in /app
-COPY /app/scripts/draw_circle.py /app/
-
-# Optional: Predefined arguments in a file
-COPY draw_circle_arguments.txt /app  
-
-IF [ "$1" == "draw_circles" ]; THEN
-  # Read arguments from file if exists
-  if [ -f "/app/draw_circle_arguments.txt" ]; THEN
-    cat /app/draw_circle_arguments.txt
-  fi
-  # Replace ... with actual arguments
-  exec ["python", "draw_circle.py", "images/circle.jpg", "$2", "images/circles_output_clean.jpg"]
-fi
+# Set the default command to show usage info
+CMD ["-c", "print('Usage: docker run <image> <python_script> [args]')"]
