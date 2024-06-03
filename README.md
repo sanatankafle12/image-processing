@@ -1,5 +1,10 @@
 # image-processing
 
+# Steps to Run the code Locally
+
+1. Download and install Docker on your machine.
+2. ```docker build . -t circle_task ``` 
+3. ``` docker run --rm -v $(pwd)/images:/usr/src/app/images circle_task  task1.py ```
 # Task 1:
 
 ![image](https://github.com/sanatankafle12/image-processing/assets/42962016/ea421b86-ba21-4f7a-9d4e-8d742c3608ce)
@@ -61,8 +66,4 @@ Use the convert_image_back function to convert the modified HSV image back to th
 Use the save_image function to save the modified image to the specified output path. 
 
 
-# Steps to Run the code Locally
 
-1. Download and install Docker on your machine.
-2. ``` docker build ``` 
-3. ``` docker run <app_name> <python_script> ```
